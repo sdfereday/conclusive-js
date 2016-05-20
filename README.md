@@ -23,16 +23,13 @@ Setup (JS side, using requireJS 'main' as example):
 ```
 #!javascript
 
-// Custom rules (as array) - these are global right now
 require(['app'], function(app){
 
 	"use strict";
 	
-	// Custom rules (as array) - these are global right now
 	var customRules = [
 		{
 			onSubmit: true,
-	  		for: "customa", // Not yet implemented
 	    	rules: {
 	    		maxLength: 12,
 	      		minLength: 2
@@ -41,7 +38,6 @@ require(['app'], function(app){
 	  	}
 	];
 
-	// Start things off
 	app.start(customRules[0]);
 
 });
