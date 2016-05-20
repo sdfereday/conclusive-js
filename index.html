@@ -8,25 +8,33 @@
 	<div class="container">
 		<form>
 			<fieldset>
-				<legend>Contact</legend>
-				<input type="text" name="firstName" placeholder="First Name" data-validateon="minlength textonly">
-				<input type="text" name="lastName" placeholder="Last Name" data-validateon="minlength textonly">
-				<input type="text" name="telephone" placeholder="Telephone" data-validateon="minlength maxlength numberonly">
-				<input type="text" name="futuredate" placeholder="Enter a future date: (DD-MM-YYYY)" data-validateon="ddmmyy futuredate required">
-				<input type="text" name="pastdate" placeholder="Enter a date in the past: (DD-MM-YYYY)" data-validateon="ddmmyy pastdate required">
-				<textarea placeholder="Enquiry" data-validateon="minlength"></textarea>
-				<button>Submit</button>
+				<legend>Inputs</legend>
+				<input type="text" name="firstName" placeholder="First Name" data-validate="minlength textonly">
+				<input type="text" name="lastName" placeholder="Last Name" data-validate="minlength textonly">
+				<input type="text" name="telephone" placeholder="Telephone" data-validate="minlength maxlength numberonly">
 			</fieldset>
-		</form>
-		<form>
 			<fieldset>
-				<legend>Contact</legend>
-				<input type="text" name="firstName" placeholder="First Name" data-validateon="minlength textonly">
-				<input type="text" name="lastName" placeholder="Last Name" data-validateon="minlength textonly">
-				<input type="text" name="telephone" placeholder="Telephone" data-validateon="minlength maxlength numberonly">
-				<input type="text" name="futuredate" placeholder="Enter a future date: (DD-MM-YYYY)" data-validateon="ddmmyy futuredate required">
-				<input type="text" name="pastdate" placeholder="Enter a date in the past: (DD-MM-YYYY)" data-validateon="ddmmyy pastdate required">
-				<textarea placeholder="Enquiry" data-validateon="minlength"></textarea>
+				<legend>Dates</legend>
+				<input type="text" name="futuredate" placeholder="Enter a future date: (DD-MM-YYYY)" data-validate="ddmmyyyy futuredate required">
+				<input type="text" name="pastdate" placeholder="Enter a date in the past: (DD-MM-YYYY)" data-validate="ddmmyyyy pastdate required">
+				<input type="text" name="pastdate" placeholder="Enter birth date (must be older than 18): (DD-MM-YYYY)" data-validate="ddmmyyyy pastdate required">
+			</fieldset>
+			<fieldset>
+				<legend>Authentication</legend>
+				<input type="password" name="password" placeholder="Enter a password" data-validate="passwordentry required">
+				<input type="password" name="confirmPassword" placeholder="Confirm your password" data-validate="passwordconfirm required">
+			</fieldset>
+			<fieldset>
+				<legend>Payment</legend>
+				<input type="text" name="cardNumber" placeholder="Card Number" data-validate="cardnumber required" />
+				<input class="third" type="text" name="expiryMonth" placeholder="Month" data-validate="expirymonth required" />
+				<input class="third" type="text" name="expiryYear" placeholder="Year" data-validate="expiryyear required" />
+				<input class="third" type="text" name="cvv" placeholder="CVV" data-validate="cvv required" />
+			</fieldset>
+			<fieldset>
+				<legend>Enquiry</legend>
+				<textarea placeholder="Enquiry" data-validate="minlength"></textarea>
+				<p>For more input ideas: http://html5doctor.com/html5-forms-input-types/</p>
 				<button>Submit</button>
 			</fieldset>
 		</form>

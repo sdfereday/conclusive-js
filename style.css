@@ -3,7 +3,7 @@ body {
   font: 85%/1.4em arial;
 }
 
-div {
+div, input, textarea {
   box-sizing: border-box;
 }
 
@@ -47,6 +47,17 @@ div {
   font-family: arial;
   padding: 0.1em;
 }
+
+.half {
+  width: 50%;
+  float: left;
+}
+
+.third {
+  width: 33.33%;
+  float: left;
+}
+
 .top {
   top: 0;
   left: 28px;
@@ -81,6 +92,11 @@ div {
   border: 1px solid #fff;
 }
 
+p {
+  float: left;
+  width: 100%;
+}
+
 fieldset {
   padding: 1em;
   border: 2px solid #ccc;
@@ -92,7 +108,7 @@ legend {
 }
 
 input, textarea {
-  width: 20em;
+  width: 100%;
   padding: 1em;
   font-size: 1em;
   margin-bottom: 1em;
@@ -116,4 +132,4 @@ button:hover {
   color: #333;
 }
 
-form { width:25em; float: left; text-align: left; }
+form { width: 100%; float: left; text-align: left; margin: 1em 0 3em;}

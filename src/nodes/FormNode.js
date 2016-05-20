@@ -64,10 +64,16 @@ define(['help', 'InputNode', 'TextareaNode'], function(help, InputNode, Textarea
 		// Finally we can use it here.
 		this.children.forEach(function(cn){
 	  
-			cn.element.getAttribute("data-validateon").split(" ").forEach(function(cls){
-				help.setupRuleset(cls, cn.element, cn, this);
-				help.setupEvents(cn.element, cn, this);
-			});
+			var attr = cn.element.getAttribute("data-validate");
+
+			if(attr){
+				cn.element.getAttribute("data-validate").split(" ").forEach(function(cls){
+					help.setupRuleset(cls, cn.element, cn, this);
+					help.setupEvents(cn.element, cn, this);
+				});
+			} else {
+				console.error("Unrecognized validate tag on element with name: '" + cn.element.getAttribute("name") + "'");
+			}
 
 		}, this);
 
@@ -77,6 +83,13 @@ define(['help', 'InputNode', 'TextareaNode'], function(help, InputNode, Textarea
 	{
 		if(typeof ch.validate === "function")
 			return ch.validate.call(ch);
+	}
+
+	FormNode.prototype.getChildren = function()
+	{
+
+		return this.children;
+
 	}
 
 	FormNode.prototype.submitted = function(e) {

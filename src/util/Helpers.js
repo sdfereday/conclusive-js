@@ -1,11 +1,13 @@
-define(["moment"], function(moment){
+define(["moment", "zxcvbn"], function(moment, zxcvbn){
 
 	var helpers = {
 
 		// Default rules to follow (global for now)
 		rules: {
 			maxLength: 6,
-		  	minLength: 1
+		  	minLength: 1,
+		  	minPasswordLength: 8,
+		  	minPasswordStrength: 3 // Out of 0 to 4
 		},
 
 		events: [],
@@ -34,6 +36,15 @@ define(["moment"], function(moment){
 
 		},
 
+		findChildNodeByDataTag: function(str, nodes)
+		{
+
+			return nodes.find(function(node){
+				return node.element.getAttribute("data-validate").indexOf(str) > -1;
+			})
+
+		},
+
 		setupEvents: function(element, elementNode, formNode){
 
 			// Just uses what we registered from global rules. This will change later.
@@ -51,10 +62,14 @@ define(["moment"], function(moment){
 
 		},
 
-		validatebyTypeOf: function(type, value, ruleset)
+		validatebyTypeOf: function(type, relatedNodes, value, ruleset)
 		{
 
-			var valid = false;
+			var valid = false,
+			feedback = {
+				passwordScore: null
+			};
+
 			switch(type){
 				case "required":
 				valid = helpers.validators.validateRequired(value.length);
@@ -71,7 +86,7 @@ define(["moment"], function(moment){
 				case "textonly":
 				valid = helpers.validators.isText(value);
 				break;
-				case "ddmmyy":
+				case "ddmmyyyy":
 				valid = helpers.validators.correctDateFormat(value);
 				break;
 				case "futuredate":
@@ -80,16 +95,55 @@ define(["moment"], function(moment){
 				case "pastdate":
 				valid = helpers.validators.dateIsPast(value);
 				break;
+				case "passwordentry":
+				var passwordInfo = helpers.validators.validatePasswordEntry(value, relatedNodes);
+				valid = passwordInfo.isValid;
+				feedback.passwordScore = passwordInfo.score;
+				break;
+				case "passwordconfirm":
+				valid = helpers.validators.validatePasswordConfirmation(value, relatedNodes);
+				break;
+				case "cardnumber":
+				//
+				break;
+				case "expirymonth":
+				//
+				break;
+				case "expiryyear":
+				//
+				break;
+				case "cvv":
+				//
+				break;
 			};
 
 			return {
 				type: type,
-				state: valid
+				state: valid,
+				dataFeedback: feedback
 			};
 
 		},
 
 		validators: {
+
+			validatePasswordEntry: function(actual, relatedNodes)
+			{
+				// Would be nice to have an easy way to show the strength and get its score for the frontend.
+				var zxcInfo = zxcvbn(actual);
+
+				return {
+					isValid: zxcvbn(actual).score >= helpers.rules.minPasswordStrength && actual.length >= helpers.rules.minPasswordLength,
+					score: zxcInfo.score
+				};
+			},
+
+			validatePasswordConfirmation: function(actual, relatedNodes)
+			{
+				// Would be nice to cache this to improve performance.
+				var passwordElement = helpers.findChildNodeByDataTag("passwordentry", relatedNodes);
+				return passwordElement.element.value === actual;
+			},
 
 			validateRequired: function(actual, req)
 			{
@@ -118,25 +172,19 @@ define(["moment"], function(moment){
 
 			correctDateFormat: function(actual)
 			{
-
 				return moment(actual, "DD-MM-YYYY", true).isValid();
-
 			},
 
 			dateIsFuture: function(actual)
 			{
-
 		        var newMoment = moment(actual, "DD-MM-YYYY");
 		        return helpers.validators.correctDateFormat(actual) && !moment().isAfter(newMoment) && actual.length > 0;
-
 			},
 
 			dateIsPast: function(actual)
 			{
-
 				var newMoment = moment(actual, "DD-MM-YYYY");
 		        return helpers.validators.correctDateFormat(actual) && moment().isAfter(newMoment) && actual.length > 0;
-
 			}
 
 		},

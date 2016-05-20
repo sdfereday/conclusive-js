@@ -73,11 +73,13 @@ define(['help'], function(help){
 		this.validatorTypes.forEach(function(str){
 
 			// Stick in a controller?
-			var result = help.validatebyTypeOf(str, this.getPresentValue(), help.getDefaultRules());
+			var result = help.validatebyTypeOf(str, this.parentNode.getChildren(), this.getPresentValue(), help.getDefaultRules());
 
 			// Ew, but just testing. :)
-			if(!result.state)
+			if(!result.state){
 				this.errorList.push(result);
+				console.log("Any extra data?", result.dataFeedback);
+			}
 
 		}, this);
 
