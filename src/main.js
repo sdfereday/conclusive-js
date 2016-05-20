@@ -1,7 +1,7 @@
 require.config({
     paths: {
     	// "ramda": "",
-    	"moment": "bower_components/moment/min/moment.min",
+    	"moment": "libs/bower_components/moment/min/moment.min",
         "help": "util/Helpers",
         "app": "core/app",
         "BaseNode": "nodes/BaseNode",
