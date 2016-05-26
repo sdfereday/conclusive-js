@@ -12,6 +12,7 @@ define(['help'], function(help){
 		this.guid = help.mguid();
  	    this.element = null;
  	    this.parentNode = null;
+ 	    this.required = false;
 		return this;
 	}
 
@@ -51,6 +52,12 @@ define(['help'], function(help){
 		    return valueArr.indexOf(valType) > -1;
 		});
 
+		if(valType === "required") {
+			this.required = true;
+			this.element.setAttribute("required", true);
+			this.element.className = this.element.className && this.element.className.length > 0 ? this.element.className + " required" : "required";
+		}
+
 		// Don't forget to check if we already have it existing!
 		if(!isDuplicate)
 			this.validatorTypes.push(valType);
@@ -63,6 +70,7 @@ define(['help'], function(help){
 
 	}
 
+	// returns: bool
 	BaseNode.prototype.validate = function()
 	{
 
@@ -73,28 +81,19 @@ define(['help'], function(help){
 		this.validatorTypes.forEach(function(str){
 
 			// Stick in a controller?
-			var result = help.validatebyTypeOf(str, this.parentNode.getChildren(), this.getPresentValue(), help.getDefaultRules());
+			var result = help.validatebyTypeOf(str, this, this.parentNode.getChildren(), this.getPresentValue(), help.getDefaultRules(), this.required);
 
 			// Ew, but just testing. :)
-			if(!result.state){
+			if(!result.state)
 				this.errorList.push(result);
-				console.log("Any extra data?", result.dataFeedback);
-			}
 
 		}, this);
 
-		// Should return the 'type' of invalid thing that it is, in case we have multiple types on it.
-		// ...
+		if(!this.required && this.element.value.length === 0)
+			return true;
 
-		// Flags parent as having errors
-		if(this.errorList.length > 0) {
-			// Consider not calling this here, and doing it on the parent form instead.
+		if(this.errorList.length > 0)
 			this.parentNode.hasErrors = true;
-			this.element.style.border = "1px solid red";
-		} else {
-			// Do a default action (to improve)
-			this.element.style.border = "1px solid green";
-		}
 
 		return this.errorList.length > 0;
 

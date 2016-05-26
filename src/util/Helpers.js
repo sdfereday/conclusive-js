@@ -12,6 +12,8 @@ define(["moment", "zxcvbn"], function(moment, zxcvbn){
 
 		events: [],
 
+		skipValid: false,
+
 		setRules: function(obj) {
 
 			var key = "";
@@ -62,12 +64,16 @@ define(["moment", "zxcvbn"], function(moment, zxcvbn){
 
 		},
 
-		validatebyTypeOf: function(type, relatedNodes, value, ruleset)
+		validatebyTypeOf: function(type, context, relatedNodes, value, ruleset, cannotBeEmpty)
 		{
 
+			helpers.skipValid = false;
+
 			var valid = false,
+			passwordInfo = {},
 			feedback = {
-				passwordScore: null
+				passwordScore: null,
+				ignored: false
 			};
 
 			switch(type){
@@ -96,26 +102,39 @@ define(["moment", "zxcvbn"], function(moment, zxcvbn){
 				valid = helpers.validators.dateIsPast(value);
 				break;
 				case "passwordentry":
-				var passwordInfo = helpers.validators.validatePasswordEntry(value, relatedNodes);
+				passwordInfo = helpers.validators.validatePasswordEntry(value, relatedNodes);
 				valid = passwordInfo.isValid;
 				feedback.passwordScore = passwordInfo.score;
 				break;
 				case "passwordconfirm":
 				valid = helpers.validators.validatePasswordConfirmation(value, relatedNodes);
 				break;
+				case "postcode":
+				valid = helpers.validators.validatePostCode(value, context.element);
+				break;
 				case "cardnumber":
-				//
+				valid = helpers.validators.validateCardNumber(value, context.element);
 				break;
 				case "expirymonth":
-				//
+				valid = helpers.validators.validateExpiry(value, context, relatedNodes);
 				break;
 				case "expiryyear":
-				//
+				valid = helpers.validators.validateExpiry(value, context, relatedNodes);
 				break;
 				case "cvv":
-				//
+				valid = helpers.validators.validateCVV(value);
 				break;
 			};
+
+			// If cannotBeEmpty isn't set, and the length of val is equal to zero,
+			// then it's okay to validate this one.
+			if(!cannotBeEmpty && value.length === 0) {
+				valid = true;
+				feedback.ignored = true;
+			}
+
+			// If not validated already this cycle, then approve
+			helpers.markValid(context.element, valid && context.errorList.length === 0);
 
 			return {
 				type: type,
@@ -126,6 +145,71 @@ define(["moment", "zxcvbn"], function(moment, zxcvbn){
 		},
 
 		validators: {
+
+			validateCardNumber: function (value, element) {
+
+		        // strip card number of non-digit characters and confirm its between 13 and 16 characters
+		        // remove all whitespace
+		        value = value.replace(/\s+/g, '');
+
+		        // Strip anything but numbers from string and validate lengths
+		        var rtest = /\D+/g,
+		        invalidFound = rtest.exec(value);
+
+		        return !invalidFound && value.length > 12 && value.length < 17 && helpers.validators.isNumber(value);
+
+		    },
+
+		    validateYear: function(value)
+		    {
+
+		    	return value.length === 4 && helpers.validators.isNumber(value);
+
+		    },
+
+		    validateMonth: function(value)
+		    {
+
+		    	return value.length === 2 && helpers.validators.isNumber(value) && value > 0 && value < 13;
+
+		    },
+
+		    validateExpiry: function(value, context, relatedNodes)
+		    {
+
+		    	var month = helpers.findChildNodeByDataTag("expirymonth", relatedNodes),
+				year = helpers.findChildNodeByDataTag("expiryyear", relatedNodes);
+
+				var validMonth = helpers.validators.validateMonth(month.element.value),
+		        validYear = helpers.validators.validateYear(year.element.value);
+
+		        var dummyMoment = moment(month.element.value + "-" + year.element.value, "MM-YYYY"),
+		        isInFuture = !moment().isAfter(dummyMoment),
+		        dateValid = dummyMoment.isValid();
+
+		        var allValid = validMonth && validYear && isInFuture && dateValid;
+
+		        helpers.markValid(month.element, allValid);
+		        helpers.markValid(year.element, allValid);
+
+		        return allValid;
+
+		    },
+
+		    validateCVV: function(value)
+		    {
+
+		    	return helpers.validators.isNumber(value) && value.length === 3;
+
+		    },
+
+			validatePostCode: function(value, element)
+			{
+				var pattern = new RegExp("(GIR ?0AA|[A-PR-UWYZ]([0-9]{1,2}|([A-HK-Y][0-9]([0-9ABEHMNPRV-Y])?)|[0-9][A-HJKPS-UW]) ?[0-9][ABD-HJLNP-UW-Z]{2})$");
+        		value = value.toUpperCase();
+    	    	element.value = value;
+	        	return value && value.length > 0 && pattern.exec(value);
+			},
 
 			validatePasswordEntry: function(actual, relatedNodes)
 			{
@@ -185,6 +269,20 @@ define(["moment", "zxcvbn"], function(moment, zxcvbn){
 			{
 				var newMoment = moment(actual, "DD-MM-YYYY");
 		        return helpers.validators.correctDateFormat(actual) && moment().isAfter(newMoment) && actual.length > 0;
+			}
+
+		},
+
+		markValid: function(element, state)
+		{
+
+			if(!state)
+			{
+				helpers.removeClass(element, "valid");
+				helpers.addClass(element, "invalid");
+			} else {
+				helpers.removeClass(element, "invalid");
+				helpers.addClass(element, "valid");
 			}
 
 		},
@@ -263,6 +361,32 @@ define(["moment", "zxcvbn"], function(moment, zxcvbn){
 				enumerable: false, 
 				value: sub 
 			});
+		},
+
+		addClass: function(element, str)
+		{
+
+			// IE10+ only.
+			// element.className = element.className && element.className.length > 0 ? element.className + " " + str : str;
+			element.classList.add(str);
+
+		},
+
+		removeClass: function(element, str)
+		{
+
+			// IE10+ only.
+			// element.className = //
+			element.classList.remove(str);
+
+		},
+
+		resetClasses: function(element)
+		{
+
+			element.classList.remove("valid");
+			element.classList.remove("invalid");
+
 		}
 
 	}

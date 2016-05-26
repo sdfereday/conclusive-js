@@ -7,6 +7,23 @@ div, input, textarea {
   box-sizing: border-box;
 }
 
+:required:focus {
+  border-color: orange;
+  border-width: 3px;
+}
+
+.required {
+  border: 1px solid orange;
+}
+
+.valid {
+  border: 1px solid green;
+}
+
+.invalid {
+  border: 1px solid red;
+}
+
 .container {
   width: 700px;
   margin: 0 auto;

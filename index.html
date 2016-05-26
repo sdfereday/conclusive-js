@@ -9,9 +9,9 @@
 		<form>
 			<fieldset>
 				<legend>Inputs</legend>
-				<input type="text" name="firstName" placeholder="First Name" data-validate="minlength textonly">
+				<input type="text" name="firstName" placeholder="First Name" data-validate="textonly">
 				<input type="text" name="lastName" placeholder="Last Name" data-validate="minlength textonly">
-				<input type="text" name="telephone" placeholder="Telephone" data-validate="minlength maxlength numberonly">
+				<input type="text" name="telephone" placeholder="Telephone" data-validate="minlength maxlength numberonly required">
 			</fieldset>
 			<fieldset>
 				<legend>Dates</legend>
@@ -23,6 +23,13 @@
 				<legend>Authentication</legend>
 				<input type="password" name="password" placeholder="Enter a password" data-validate="passwordentry required">
 				<input type="password" name="confirmPassword" placeholder="Confirm your password" data-validate="passwordconfirm required">
+			</fieldset>
+			<fieldset>
+				<legend>Address</legend>
+				<input type="text" name="Address Line One" placeholder="Address line one" data-validate="textonly required">
+				<input type="text" name="Address Line Two" placeholder="Address line two" data-validate="textonly">
+				<input type="text" name="City" placeholder="City" data-validate="textonly required">
+				<input type="text" name="Postcode" placeholder="Postcode" data-validate="postcode required">
 			</fieldset>
 			<fieldset>
 				<legend>Payment</legend>
