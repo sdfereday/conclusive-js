@@ -60,6 +60,12 @@ define(["moment", "zxcvbn"], function(moment, zxcvbn){
 		// This 'might' be best as just a static method of a ruleset class.
 		setupRuleset: function(type, element, elementNode, formNode){
 
+			if(type === "confirmemail" || type === "nopaste") {
+				element.addEventListener("paste", function(e){
+					e.preventDefault();
+				});
+			}
+
 			elementNode.registerValidation(type);
 
 		},
@@ -109,6 +115,12 @@ define(["moment", "zxcvbn"], function(moment, zxcvbn){
 				case "passwordconfirm":
 				valid = helpers.validators.validatePasswordConfirmation(value, relatedNodes);
 				break;
+				case "email":
+				valid = helpers.validators.validateEmail(value);
+				break;
+				case "confirmemail":
+				valid = helpers.validators.confirmEmail(value, relatedNodes);
+				break;
 				case "postcode":
 				valid = helpers.validators.validatePostCode(value, context.element);
 				break;
@@ -145,6 +157,27 @@ define(["moment", "zxcvbn"], function(moment, zxcvbn){
 		},
 
 		validators: {
+
+			validateEmail: function(value)
+			{
+
+				// ... This is a work in progress.
+				// Must be careful when validating email addresses.
+				// http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
+				// http://www.regular-expressions.info/email.html
+				// This makes a simple layout check, nothing more, nothing less right now.
+				var re = /\S+@\S+\.\S+/;
+			    return re.test(value);
+
+			},
+
+			confirmEmail: function(value, relatedNodes)
+			{
+
+				var emailInput = helpers.findChildNodeByDataTag("email", relatedNodes);
+				return helpers.validators.validateStringMatch(value, emailInput.element.value);
+
+			},
 
 			validateCardNumber: function (value, element) {
 
@@ -226,12 +259,20 @@ define(["moment", "zxcvbn"], function(moment, zxcvbn){
 			{
 				// Would be nice to cache this to improve performance.
 				var passwordElement = helpers.findChildNodeByDataTag("passwordentry", relatedNodes);
-				return passwordElement.element.value === actual;
+				return helpers.validators.validateStringMatch(actual, passwordElement.element.value);
 			},
 
 			validateRequired: function(actual, req)
 			{
 				return helpers.validators.validateMin(actual, 1);
+			},
+
+			validateStringMatch: function(a, b)
+			{
+				// Match won't care if the whole string is different, only that the string is within the original.
+				// http://stackoverflow.com/questions/3172985/javascript-use-variable-in-string-match
+				var re = new RegExp(b, 'g');
+				return a.match(re) && a.length === b.length;
 			},
 
 			validateMin: function(actual, req)
