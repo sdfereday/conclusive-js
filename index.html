@@ -11,13 +11,13 @@
 				<legend>Inputs</legend>
 				<input type="text" name="firstName" placeholder="First Name" data-validate="textonly">
 				<input type="text" name="lastName" placeholder="Last Name" data-validate="minlength textonly">
-				<input type="text" name="telephone" placeholder="Telephone" data-validate="minlength maxlength numberonly required">
+				<input type="text" name="telephone" placeholder="Telephone" data-validate="telephone required">
 			</fieldset>
 			<fieldset>
 				<legend>Dates</legend>
 				<input type="text" name="futuredate" placeholder="Enter a future date: (DD-MM-YYYY)" data-validate="ddmmyyyy futuredate required">
 				<input type="text" name="pastdate" placeholder="Enter a date in the past: (DD-MM-YYYY)" data-validate="ddmmyyyy pastdate required">
-				<input type="text" name="pastdate" placeholder="Enter birth date (must be older than 18): (DD-MM-YYYY)" data-validate="ddmmyyyy pastdate required">
+				<input type="text" name="birthdate" placeholder="Enter birth date (must be at least 18): (DD-MM-YYYY)" data-validate="birthdate required">
 			</fieldset>
 			<fieldset>
 				<legend>Authentication</legend>

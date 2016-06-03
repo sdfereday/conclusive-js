@@ -1,4 +1,4 @@
-define(['help'], function(help){
+define(['helpers', 'handler'], function(help, handler){
 
 	var BaseNode = function() {
 		return this.create();
@@ -81,7 +81,7 @@ define(['help'], function(help){
 		this.validatorTypes.forEach(function(str){
 
 			// Stick in a controller?
-			var result = help.validatebyTypeOf(str, this, this.parentNode.getChildren(), this.getPresentValue(), help.getDefaultRules(), this.required);
+			var result = handler.validatebyTypeOf(str, this, this.parentNode.getChildren(), this.getPresentValue(), this.required);
 
 			// Ew, but just testing. :)
 			if(!result.state)

@@ -1,4 +1,4 @@
-define(['help', 'BaseNode'], function(help, BaseNode){
+define(['helpers', 'BaseNode'], function(help, BaseNode){
 
 	var TextareaNode = function() {
 		BaseNode.call(this);

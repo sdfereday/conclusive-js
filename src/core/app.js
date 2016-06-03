@@ -1,4 +1,4 @@
-define(['FormNode', 'help'], function(FormNode, help){
+define(['FormNode', 'handler'], function(FormNode, handler){
 	
 	var App = function() {
 	  
@@ -10,7 +10,7 @@ define(['FormNode', 'help'], function(FormNode, help){
 	App.prototype.start = function(customRules) {
 		
 		if(customRules !== null)
-			help.setRules(customRules);
+			handler.setRules(customRules);
 
 		this.getFormNodes(customRules);
 	

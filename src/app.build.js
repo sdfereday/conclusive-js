@@ -1,7 +1,7 @@
 ({
     baseUrl: ".",
     paths: {
-        "help": "util/Helpers",
+        "helpers": "util/Helpers",
         "app": "core/app",
         "FormNode": "nodes/FormNode",
         "InputNode": "nodes/InputNode",

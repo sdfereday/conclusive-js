@@ -1,4 +1,4 @@
-define(['help', 'InputNode', 'TextareaNode'], function(help, InputNode, TextareaNode){
+define(['helpers', 'handler', 'InputNode', 'TextareaNode'], function(help, handler, InputNode, TextareaNode){
 
 	// A data object that resembles a form.
 	var FormNode = function() {
@@ -68,8 +68,8 @@ define(['help', 'InputNode', 'TextareaNode'], function(help, InputNode, Textarea
 
 			if(attr){
 				cn.element.getAttribute("data-validate").split(" ").forEach(function(cls){
-					help.setupRuleset(cls, cn.element, cn, this);
-					help.setupEvents(cn.element, cn, this);
+					handler.setupRuleset(cls, cn.element, cn, this);
+					handler.setupEvents(cn.element, cn, this);
 				});
 			} else {
 				console.error("Unrecognized validate tag on element with name: '" + cn.element.getAttribute("name") + "'");

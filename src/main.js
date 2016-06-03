@@ -3,12 +3,15 @@ require.config({
     	// "ramda": "",
     	"moment": "libs/bower_components/moment/min/moment.min",
     	"zxcvbn": "libs/bower_components/zxcvbn/dist/zxcvbn",
-        "help": "util/Helpers",
+        "helpers": "util/Helpers",
+        "handler": "util/handler",
+        "validators": "util/Validators",
         "app": "core/app",
         "BaseNode": "nodes/BaseNode",
         "FormNode": "nodes/FormNode",
         "InputNode": "nodes/InputNode",
-        "TextareaNode": "nodes/TextareaNode"
+        "TextareaNode": "nodes/TextareaNode",
+        "rules": "rules"
     }
 });
 
